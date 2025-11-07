@@ -78,7 +78,7 @@
         <button type="submit">Send</button>
     </form> -->
 
-    <div class="container my-5">
+    <!-- <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
                 <form action="/contact" method="POST" class="contact-form">
@@ -96,7 +96,75 @@
                 </form>
             </div>
         </div>
+    </div> -->
+
+
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <!-- Success notification (hidden by default) -->
+                <div id="successMessage" class="alert alert-success alert-dismissible fade" role="alert"
+                    style="display: none;">
+                    <strong>Success!</strong> Your message has been sent successfully.
+                </div>
+
+                <form id="contactForm" class="contact-form">
+                    <div class="mb-4">
+                        <input type="text" name="name" class="form-control" placeholder="Name and Contact Information"
+                            required>
+                    </div>
+                    <div class="mb-4">
+                        <textarea name="message" class="form-control" rows="6" placeholder="Your Message"
+                            required></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary px-5 py-2">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const form = e.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            try {
+                const response = await fetch('/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    const successMsg = document.getElementById('successMessage');
+                    successMsg.style.display = 'block';
+                    successMsg.classList.add('show');
+
+                    form.reset();
+
+                    setTimeout(() => {
+                        successMsg.classList.remove('show');
+                        setTimeout(() => {
+                            successMsg.style.display = 'none';
+                        }, 150);
+                    }, 5000);
+                } else {
+                    alert('Error sending message. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error sending message. Please try again.');
+            }
+        });
+    </script>
+
 
 </body>
 

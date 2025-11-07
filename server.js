@@ -16,11 +16,44 @@ app.use(bodyParser.json());
 // Serve static files (your HTML, CSS)
 app.use(express.static('public'));
 
+// app.post('/contact', async (req, res) => {
+//     const { name, email, message } = req.body;
+
+//     const transporter = nodemailer.createTransport({
+//         service: 'Gmail', // or your SMTP provider
+//         auth: {
+//             user: process.env.EMAIL_USER,
+//             pass: process.env.EMAIL_PASS,
+//         },
+//     });
+
+//     const mailOptions = {
+//         from: email,
+//         to: process.env.CONTRACTOR_EMAIL,
+//         subject: `New Message from ${name}`,
+//         text: message,
+//     };
+
+//     try {
+//         await transporter.sendMail(mailOptions);
+//         res.send('Message sent successfully!');
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).send('Error sending message');
+//     }
+// });
+
 app.post('/contact', async (req, res) => {
-    const { name, email, message } = req.body;
+    const { name, message } = req.body;  // Changed: removed 'email' since form doesn't have it
+
+    // Validate environment variables
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+        console.error('Missing email credentials in .env file');
+        return res.status(500).json({ error: 'Server configuration error' });
+    }
 
     const transporter = nodemailer.createTransport({
-        service: 'Gmail', // or your SMTP provider
+        service: 'Gmail',
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS,
@@ -28,18 +61,18 @@ app.post('/contact', async (req, res) => {
     });
 
     const mailOptions = {
-        from: email,
+        from: process.env.EMAIL_USER,  // Changed: use your email as sender
         to: process.env.CONTRACTOR_EMAIL,
         subject: `New Message from ${name}`,
-        text: message,
+        text: `From: ${name}\n\n${message}`,  // Changed: added formatting
     };
 
     try {
         await transporter.sendMail(mailOptions);
-        res.send('Message sent successfully!');
+        res.json({ success: true, message: 'Message sent successfully!' });  // Changed: send JSON
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Error sending message');
+        console.error('Error sending email:', error);
+        res.status(500).json({ error: 'Error sending message' });  // Changed: send JSON
     }
 });
 
