@@ -7,3 +7,39 @@ body {
 h1 {
     font-family: 'Allerta Stencil', sans-serif;
 }
+
+.contact-form .form-control {
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid rgba(200, 200, 200, 0.3);
+    border-radius: 25px;
+    padding: 15px 20px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.contact-form .form-control:focus {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(13, 110, 253, 0.5);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+    outline: none;
+}
+
+.contact-form .form-control::placeholder {
+    color: rgba(108, 117, 125, 0.7);
+}
+
+.contact-form textarea.form-control {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.contact-form .btn {
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.contact-form .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
